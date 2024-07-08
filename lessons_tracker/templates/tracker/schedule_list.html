@@ -1,0 +1,44 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}
+Расписание
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Расписание занятий</h1>
+    <form method="get" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                {{ form.search.label_tag }}
+                {{ form.search }}
+            </div>
+            <div class="col-md-4">
+                {{ form.date.label_tag }}
+                {{ form.date }}
+            </div>
+            <div class="col-md-4">
+                {{ form.teacher.label_tag }}
+                {{ form.teacher }}
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary mt-4">Поиск</button>
+            </div>
+        </div>
+    </form>
+
+    <ul class="list-group">
+        {% for schedule in schedules %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <a href="{% url 'schedule_detail' schedule.pk %}">{{ schedule.title }}</a> - {{ schedule.date }}
+					- {{ schedule.teacher.get_full_name }}
+                </span>
+                {% if user.is_authenticated and user.is_teacher %}
+                    <a href="{% url 'schedule_edit' schedule.pk %}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
